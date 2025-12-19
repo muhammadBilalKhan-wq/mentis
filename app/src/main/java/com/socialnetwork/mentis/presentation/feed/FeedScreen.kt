@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -24,7 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
-import androidx.paging.compose.*
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import com.socialnetwork.mentis.R
 import com.socialnetwork.mentis.domain.model.Post
 
@@ -46,59 +48,35 @@ fun FeedScreen(
             )
         }
     ) { paddingValues ->
-        LazyColumn(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(paddingValues)
         ) {
-            items(posts) { post ->
-                if (post != null) {
-                    PostItem(post = post)
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(posts) { post ->
+                    post?.let {
+                        PostItem(post = it)
+                    }
+                }
+
+                if (posts.loadState.append is LoadState.Loading) {
+                    item {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentWidth(Alignment.CenterHorizontally)
+                        )
+                    }
                 }
             }
 
-            posts.apply {
-                when {
-                    loadState.refresh is LoadState.Loading -> {
-                        item {
-                            Box(
-                                modifier = Modifier.fillParentMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator()
-                            }
-                        }
-                    }
-                    loadState.append is LoadState.Loading -> {
-                        item {
-                            Box(
-                                modifier = Modifier.fillMaxWidth(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator()
-                            }
-                        }
-                    }
-                    loadState.refresh is LoadState.Error -> {
-                        val e = posts.loadState.refresh as LoadState.Error
-                        item {
-                            Box(
-                                modifier = Modifier.fillParentMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(text = e.error.localizedMessage ?: "An error occurred")
-                            }
-                        }
-                    }
-                    loadState.append is LoadState.Error -> {
-                        val e = posts.loadState.append as LoadState.Error
-                        item {
-                            Text(text = e.error.localizedMessage ?: "An error occurred")
-                        }
-                    }
-                }
+            if (posts.loadState.refresh is LoadState.Loading) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         }
     }
