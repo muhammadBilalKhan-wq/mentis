@@ -10,15 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.ViewModelProvider
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.socialnetwork.mentis.domain.model.FeedUiState
 
 @Composable
 fun FeedScreen(
-    factory: ViewModelProvider.Factory,
-    viewModel: FeedViewModel = viewModel(factory = factory)
+    viewModel: FeedViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     FeedContent(uiState)
