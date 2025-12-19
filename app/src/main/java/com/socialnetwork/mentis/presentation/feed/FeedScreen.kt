@@ -9,6 +9,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,12 +33,14 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.socialnetwork.mentis.R
 import com.socialnetwork.mentis.domain.model.Post
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun FeedScreen(
     viewModel: FeedViewModel = hiltViewModel()
 ) {
     val posts = viewModel.posts.collectAsLazyPagingItems()
+    val isRefreshing = posts.loadState.refresh is LoadState.Loading
+    val pullRefreshState = rememberPullRefreshState(isRefreshing, { posts.refresh() })
 
     Scaffold(
         topBar = {
@@ -51,58 +57,57 @@ fun FeedScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .pullRefresh(pullRefreshState)
         ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(count = posts.itemCount) { index ->
-                    val post = posts[index]
-                    if (post != null) {
-                        PostItem(post = post)
-                    }
-                }
-
-                posts.loadState.apply {
-                    when {
-                        append is LoadState.Loading -> {
-                            item {
-                                CircularProgressIndicator(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .wrapContentWidth(Alignment.CenterHorizontally)
-                                )
-                            }
+            if (posts.loadState.refresh is LoadState.Error && posts.itemCount == 0) {
+                val e = posts.loadState.refresh as LoadState.Error
+                Text(
+                    text = e.error.localizedMessage ?: "An error occurred",
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(count = posts.itemCount) { index ->
+                        val post = posts[index]
+                        if (post != null) {
+                            PostItem(post = post)
                         }
-                        append is LoadState.Error -> {
-                            val e = append as LoadState.Error
-                            item {
-                                Text(
-                                    text = e.error.localizedMessage ?: "An error occurred",
-                                    modifier = Modifier.fillMaxWidth(),
-                                )
+                    }
+
+                    posts.loadState.apply {
+                        when {
+                            append is LoadState.Loading -> {
+                                item {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .wrapContentWidth(Alignment.CenterHorizontally)
+                                    )
+                                }
+                            }
+                            append is LoadState.Error -> {
+                                val e = append as LoadState.Error
+                                item {
+                                    Text(
+                                        text = e.error.localizedMessage ?: "An error occurred",
+                                        modifier = Modifier.fillMaxWidth(),
+                                    )
+                                }
                             }
                         }
                     }
                 }
             }
 
-            posts.loadState.apply {
-                when {
-                    refresh is LoadState.Loading -> {
-                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                    }
-                    refresh is LoadState.Error -> {
-                        val e = refresh as LoadState.Error
-                        Text(
-                            text = e.error.localizedMessage ?: "An error occurred",
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
-                    else -> {}
-                }
-            }
+            PullRefreshIndicator(
+                refreshing = isRefreshing,
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
         }
     }
 }
