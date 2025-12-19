@@ -1,8 +1,22 @@
 package com.socialnetwork.mentis.presentation.feed
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,40 +59,51 @@ fun FeedScreen(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Using the explicit `items` function with a key
                 items(
                     items = posts,
                     key = { post -> post.id }
                 ) { post ->
-                    post?.let {
-                        PostItem(post = it)
-                    }
+                    post?.let { PostItem(post = it) }
                 }
 
-                // Loading spinner for appending new items
-                if (posts.loadState.append is LoadState.Loading) {
-                    item {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .wrapContentWidth(Alignment.CenterHorizontally)
+                posts.loadState.apply {
+                    when {
+                        append is LoadState.Loading -> {
+                            item {
+                                CircularProgressIndicator(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .wrapContentWidth(Alignment.CenterHorizontally)
+                                )
+                            }
+                        }
+                        append is LoadState.Error -> {
+                            val e = append as LoadState.Error
+                            item {
+                                Text(
+                                    text = e.error.localizedMessage ?: "An error occurred",
+                                    modifier = Modifier.fillMaxWidth(),
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            posts.loadState.apply {
+                when {
+                    refresh is LoadState.Loading -> {
+                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                    }
+                    refresh is LoadState.Error -> {
+                        val e = refresh as LoadState.Error
+                        Text(
+                            text = e.error.localizedMessage ?: "An error occurred",
+                            modifier = Modifier.align(Alignment.Center)
                         )
                     }
+                    else -> {}
                 }
-            }
-
-            // Full-screen spinner for the initial load
-            if (posts.loadState.refresh is LoadState.Loading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-
-            // Error message for initial load failure
-            if (posts.loadState.refresh is LoadState.Error) {
-                val e = posts.loadState.refresh as LoadState.Error
-                Text(
-                    text = e.error.localizedMessage ?: "An error occurred",
-                    modifier = Modifier.align(Alignment.Center)
-                )
             }
         }
     }
