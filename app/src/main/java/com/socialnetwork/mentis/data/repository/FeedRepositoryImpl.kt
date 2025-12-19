@@ -4,8 +4,9 @@ import com.socialnetwork.mentis.domain.model.Post
 import com.socialnetwork.mentis.domain.repository.FeedRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import javax.inject.Inject
 
-class FeedRepositoryImpl : FeedRepository {
+class FeedRepositoryImpl @Inject constructor() : FeedRepository {
     override fun getPosts(): Flow<Result<List<Post>>> {
         // In a real app, you'd fetch this from a data source.
         val posts = listOf(
