@@ -40,3 +40,5 @@ androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navig
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+libs.androidx.paging.runtime.ktx = { module = "androidx.paging:paging-runtime-ktx", version = "3.3.0-alpha02" }
+libs.androidx.paging.compose = { module = "androidx.paging:paging-compose", version = "3.3.0-alpha02" }
