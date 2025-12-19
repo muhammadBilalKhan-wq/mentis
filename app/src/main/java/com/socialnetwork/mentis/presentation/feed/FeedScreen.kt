@@ -25,9 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import com.socialnetwork.mentis.R
 import com.socialnetwork.mentis.domain.model.Post
 
@@ -36,7 +34,7 @@ import com.socialnetwork.mentis.domain.model.Post
 fun FeedScreen(
     viewModel: FeedViewModel = hiltViewModel()
 ) {
-    val posts: LazyPagingItems<Post> = viewModel.posts.collectAsLazyPagingItems()
+    val posts = viewModel.posts.collectAsLazyPagingItems()
 
     Scaffold(
         topBar = {
@@ -59,11 +57,11 @@ fun FeedScreen(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(
-                    items = posts,
-                    key = { post -> post.id }
-                ) { post ->
-                    post?.let { PostItem(post = it) }
+                items(count = posts.itemCount) { index ->
+                    val post = posts[index]
+                    if (post != null) {
+                        PostItem(post = post)
+                    }
                 }
 
                 posts.loadState.apply {
