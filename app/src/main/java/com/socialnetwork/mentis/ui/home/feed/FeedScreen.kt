@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import com.socialnetwork.mentis.ui.home.post.PostItem
+import androidx.paging.compose.items
 
 @Composable
 fun FeedScreen(
