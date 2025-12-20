@@ -21,11 +21,8 @@ fun FeedScreen(
     val feedPagingItems = viewModel.feedPagingData.collectAsLazyPagingItems()
 
     LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(feedPagingItems.itemCount) { index ->
-            val post = feedPagingItems[index]
-            if (post != null) {
-                PostItem(post = post)
-            }
+        items(feedPagingItems) { post ->
+            post?.let { PostItem(post = it) }
         }
 
         feedPagingItems.apply {
