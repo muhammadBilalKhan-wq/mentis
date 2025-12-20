@@ -4,11 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PostDto(
-    val id: String,
-    val user: String,
-    val imageUrl: String,
-    val caption: String,
-    val likes: Int,
-    val comments: Int,
-    val timestamp: Long
+    val userId: Int,
+    val id: Int,
+    val title: String,
+    val body: String
 )
