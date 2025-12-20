@@ -1,5 +1,7 @@
 package com.socialnetwork.mentis.di
 
+import android.content.Context
+import androidx.room.Room
 import com.socialnetwork.mentis.data.local.AppDatabase
 import com.socialnetwork.mentis.data.remote.FeedApi
 import com.socialnetwork.mentis.data.repository.FeedRepositoryImpl
@@ -7,18 +9,11 @@ import com.socialnetwork.mentis.domain.repository.FeedRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.okhttp.OkHttp
-import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.logging.DEFAULT
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logger
-import io.ktor.client.plugins.logging.Logging
-import io.ktor.http.URLProtocol
-import io.ktor.http.path
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import javax.inject.Singleton
@@ -27,33 +22,16 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    private const val TIMEOUT_MILLISECONDS = 15_000L
-
     @Provides
     @Singleton
     fun provideHttpClient(): HttpClient {
-        return HttpClient(OkHttp) {
+        return HttpClient(Android) {
             install(ContentNegotiation) {
                 json(Json {
-                    ignoreUnknownKeys = true
+                    prettyPrint = true
                     isLenient = true
+                    ignoreUnknownKeys = true
                 })
-            }
-            install(Logging) {
-                logger = Logger.DEFAULT
-                level = LogLevel.BODY
-            }
-            install(HttpTimeout) {
-                connectTimeoutMillis = TIMEOUT_MILLISECONDS
-                requestTimeoutMillis = TIMEOUT_MILLISECONDS
-                socketTimeoutMillis = TIMEOUT_MILLISECONDS
-            }
-            defaultRequest {
-                url {
-                    protocol = URLProtocol.HTTPS
-                    host = "my-json-server.typicode.com"
-                    path("sayyed-basith/mentis-fake-api/")
-                }
             }
         }
     }
@@ -69,4 +47,22 @@ object AppModule {
     fun provideFeedRepository(feedApi: FeedApi, appDatabase: AppDatabase): FeedRepository {
         return FeedRepositoryImpl(feedApi, appDatabase)
     }
+
+    @Provides
+    @Singleton
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
+        return Room.databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            "mentis-db"
+        ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun providePostDao(appDatabase: AppDatabase) = appDatabase.postDao()
+
+    @Provides
+    @Singleton
+    fun provideRemoteKeysDao(appDatabase: AppDatabase) = appDatabase.remoteKeysDao()
 }
