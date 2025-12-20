@@ -119,9 +119,9 @@ fun FeedScreen(
                 }
             }
 
-            when (val refreshState = posts.loadState.refresh) {
-                is LoadState.Loading -> {
-                    if (posts.itemCount == 0) {
+            if (posts.itemCount == 0) {
+                when (val refreshState = posts.loadState.refresh) {
+                    is LoadState.Loading -> {
                         Box(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
@@ -129,9 +129,8 @@ fun FeedScreen(
                             CircularProgressIndicator()
                         }
                     }
-                }
-                is LoadState.Error -> {
-                    if (posts.itemCount == 0) {
+
+                    is LoadState.Error -> {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -143,7 +142,8 @@ fun FeedScreen(
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 Text(
-                                    text = refreshState.error.localizedMessage ?: "An error occurred",
+                                    text = refreshState.error.localizedMessage
+                                        ?: "An error occurred",
                                     textAlign = TextAlign.Center
                                 )
                                 Button(onClick = { posts.retry() }) {
@@ -152,8 +152,19 @@ fun FeedScreen(
                             }
                         }
                     }
+
+                    is LoadState.NotLoading -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "No posts available.\nPull down to refresh.",
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
                 }
-                else -> Unit
             }
 
             PullToRefreshContainer(
