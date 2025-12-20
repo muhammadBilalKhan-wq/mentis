@@ -5,6 +5,7 @@ import androidx.paging.PagingState
 import com.socialnetwork.mentis.data.mapper.toDomain
 import com.socialnetwork.mentis.data.remote.FeedApi
 import com.socialnetwork.mentis.domain.model.Post
+import com.socialnetwork.mentis.data.mapper.toDomain
 
 class PostPagingSource(
     private val feedApi: FeedApi
