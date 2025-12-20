@@ -1,10 +1,10 @@
 package com.socialnetwork.mentis.data.mapper
 
 import com.socialnetwork.mentis.data.dto.PostDto
-import com.socialnetwork.mentis.domain.model.Post
+import com.socialnetwork.mentis.data.local.entity.PostEntity
 
-fun PostDto.toPost(): Post {
-    return Post(
+fun PostDto.toEntity(): PostEntity {
+    return PostEntity(
         id = id.toString(),
         user = "User $userId",
         imageUrl = "https://picsum.photos/id/$id/800/800",
