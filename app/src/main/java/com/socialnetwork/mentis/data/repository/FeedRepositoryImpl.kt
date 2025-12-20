@@ -13,22 +13,31 @@ import com.socialnetwork.mentis.domain.model.Post
 import com.socialnetwork.mentis.domain.repository.FeedRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)
-class FeedRepositoryImpl(
+class FeedRepositoryImpl @Inject constructor(
     private val feedApi: FeedApi,
     private val appDatabase: AppDatabase
 ) : FeedRepository {
 
     override fun getPosts(): Flow<PagingData<Post>> {
+        val pagingSourceFactory = { appDatabase.postDao().getPosts() }
+
         return Pager(
-            config = PagingConfig(pageSize = 20),
-            remoteMediator = PostRemoteMediator(feedApi, appDatabase),
-            pagingSourceFactory = {
-                appDatabase.postDao().getPosts()
-            }
+            config = PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = false
+            ),
+            remoteMediator = PostRemoteMediator(
+                feedApi = feedApi,
+                appDatabase = appDatabase
+            ),
+            pagingSourceFactory = pagingSourceFactory
         ).flow.map { pagingData ->
-            pagingData.map { it.toDomain() }
+            pagingData.map { postEntity ->
+                postEntity.toDomain()
+            }
         }
     }
 }

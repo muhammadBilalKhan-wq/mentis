@@ -7,25 +7,23 @@ import com.socialnetwork.mentis.domain.model.Post
 fun PostDto.toEntity(): PostEntity {
     return PostEntity(
         id = id,
-        userId = "", // Placeholder, not available in PostDto
-        username = user,
-        userImageUrl = "", // Placeholder, not available in PostDto
+        description = description,
+        date = date,
+        likes = likes,
+        comments = comments,
         imageUrl = imageUrl,
-        description = caption,
-        timestamp = timestamp,
-        likeCount = likes,
-        commentCount = comments
+        user = user
     )
 }
 
 fun PostEntity.toDomain(): Post {
     return Post(
         id = id,
+        description = description,
+        date = date,
+        likes = likes,
+        comments = comments,
         imageUrl = imageUrl,
-        user = username,
-        likes = likeCount,
-        comments = commentCount,
-        caption = description,
-        timestamp = timestamp
+        user = user
     )
 }

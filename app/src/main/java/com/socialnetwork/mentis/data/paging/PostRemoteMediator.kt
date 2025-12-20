@@ -22,7 +22,10 @@ class PostRemoteMediator(
     private val postDao = appDatabase.postDao()
     private val remoteKeysDao = appDatabase.remoteKeysDao()
 
-    override suspend fun load(loadType: LoadType, state: PagingState<Int, PostEntity>): MediatorResult {
+    override suspend fun load(
+        loadType: LoadType,
+        state: PagingState<Int, PostEntity>
+    ): MediatorResult {
         return try {
             val currentPage = when (loadType) {
                 LoadType.REFRESH -> {
@@ -31,38 +34,34 @@ class PostRemoteMediator(
                 }
                 LoadType.PREPEND -> {
                     val remoteKeys = getRemoteKeyForFirstItem(state)
-                    val prevPage = remoteKeys?.prevKey
-                        ?: return MediatorResult.Success(
-                            endOfPaginationReached = remoteKeys != null
-                        )
-                    prevPage
+                    val prevKey = remoteKeys?.prevKey
+                        ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+                    prevKey
                 }
                 LoadType.APPEND -> {
                     val remoteKeys = getRemoteKeyForLastItem(state)
-                    val nextPage = remoteKeys?.nextKey
-                        ?: return MediatorResult.Success(
-                            endOfPaginationReached = remoteKeys != null
-                        )
-                    nextPage
+                    val nextKey = remoteKeys?.nextKey
+                        ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+                    nextKey
                 }
             }
 
-            val response = feedApi.getPosts()
+            val response = feedApi.getPosts(page = currentPage, limit = state.config.pageSize)
             val endOfPaginationReached = response.isEmpty()
 
-            val prevPage = if (currentPage == 1) null else currentPage - 1
-            val nextPage = if (endOfPaginationReached) null else currentPage + 1
+            val prevKey = if (currentPage == 1) null else currentPage - 1
+            val nextKey = if (endOfPaginationReached) null else currentPage + 1
 
             appDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    postDao.clearPosts()
+                    postDao.clearAll()
                     remoteKeysDao.clearRemoteKeys()
                 }
-                val keys = response.map {
+                val keys = response.map { post ->
                     RemoteKeys(
-                        repoId = it.id,
-                        prevKey = prevPage,
-                        nextKey = nextPage
+                        id = post.id,
+                        prevKey = prevKey,
+                        nextKey = nextKey
                     )
                 }
                 remoteKeysDao.insertAll(keys)
@@ -77,21 +76,24 @@ class PostRemoteMediator(
     }
 
     private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, PostEntity>): RemoteKeys? {
-        return state.anchorPosition?.let {
-            state.closestItemToPosition(it)?.id?.let {
-                remoteKeysDao.remoteKeysRepoId(it)
+        return state.anchorPosition?.let { position ->
+            state.closestItemToPosition(position)?.id?.let { id ->
+                remoteKeysDao.remoteKeysPostId(id)
             }
         }
     }
 
     private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, PostEntity>): RemoteKeys? {
-        return state.pages.firstOrNull() { it.data.isNotEmpty() }?.data?.firstOrNull()
-            ?.let { remoteKeysDao.remoteKeysRepoId(it.id) }
+        return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
+            ?.let { post ->
+                remoteKeysDao.remoteKeysPostId(post.id)
+            }
     }
 
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, PostEntity>): RemoteKeys? {
-        return state.pages.lastOrNull() { it.data.isNotEmpty() }?.data?.lastOrNull()
-            ?.let { remoteKeysDao.remoteKeysRepoId(it.id) }
+        return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()
+            ?.let { post ->
+                remoteKeysDao.remoteKeysPostId(post.id)
+            }
     }
-
 }

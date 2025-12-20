@@ -13,10 +13,9 @@ interface PostDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(posts: List<PostEntity>)
 
-    @Query("SELECT * FROM posts ORDER BY timestamp DESC")
+    @Query("SELECT * FROM posts ORDER BY date DESC")
     fun getPosts(): PagingSource<Int, PostEntity>
 
     @Query("DELETE FROM posts")
-    suspend fun clearPosts()
-
+    suspend fun clearAll()
 }
