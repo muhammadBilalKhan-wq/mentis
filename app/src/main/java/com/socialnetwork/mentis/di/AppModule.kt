@@ -1,6 +1,5 @@
 package com.socialnetwork.mentis.di
 
-import android.content.Context
 import com.socialnetwork.mentis.data.local.AppDatabase
 import com.socialnetwork.mentis.data.remote.FeedApi
 import com.socialnetwork.mentis.data.repository.FeedRepositoryImpl
@@ -8,7 +7,6 @@ import com.socialnetwork.mentis.domain.repository.FeedRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -36,12 +34,6 @@ object AppModule {
     @Singleton
     fun provideFeedApi(client: HttpClient): FeedApi {
         return FeedApi(client)
-    }
-
-    @Provides
-    @Singleton
-    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
-        return AppDatabase.getInstance(context)
     }
 
     @Provides
