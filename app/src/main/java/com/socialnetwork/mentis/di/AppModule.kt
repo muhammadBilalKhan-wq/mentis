@@ -17,7 +17,6 @@ import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.request.host
 import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
@@ -49,9 +48,9 @@ object AppModule {
                 socketTimeoutMillis = TIMEOUT_MILLISECONDS
             }
             defaultRequest {
-                host = "my-json-server.typicode.com"
                 url {
                     protocol = URLProtocol.HTTPS
+                    host = "my-json-server.typicode.com"
                 }
             }
         }

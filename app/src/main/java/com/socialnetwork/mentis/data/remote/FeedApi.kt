@@ -9,7 +9,7 @@ import io.ktor.client.request.parameter
 class FeedApi(private val client: HttpClient) {
 
     suspend fun getPosts(page: Int, limit: Int): List<PostDto> {
-        return client.get("https://my-json-server.typicode.com/sayyed-basith/mentis-fake-api/posts") {
+        return client.get("/sayyed-basith/mentis-fake-api/posts") {
             parameter("_page", page)
             parameter("_limit", limit)
         }.body()
