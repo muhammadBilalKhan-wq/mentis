@@ -2,10 +2,9 @@ package com.socialnetwork.mentis.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.socialnetwork.mentis.core.data.mapper.toDomain
-import com.socialnetwork.mentis.core.data.remote.FeedApi
-import com.socialnetwork.mentis.core.domain.model.Post
-import com.socialnetwork.mentis.core.domain.model.Result
+import com.socialnetwork.mentis.data.mapper.toDomain
+import com.socialnetwork.mentis.data.remote.FeedApi
+import com.socialnetwork.mentis.domain.model.Post
 
 class PostPagingSource(
     private val feedApi: FeedApi
@@ -15,18 +14,15 @@ class PostPagingSource(
         val page = params.key ?: 1
         val pageSize = params.loadSize
 
-        return when (val result = feedApi.getFeed(page, pageSize)) {
-            is Result.Success -> {
-                val posts = result.data.map { it.toDomain() }
-                LoadResult.Page(
-                    data = posts,
-                    prevKey = if (page == 1) null else page - 1,
-                    nextKey = if (posts.isEmpty()) null else page + 1
-                )
-            }
-            is Result.Error -> {
-                LoadResult.Error(Exception(result.error.message))
-            }
+        return try {
+            val posts = feedApi.getPosts().map { it.toDomain() }
+            LoadResult.Page(
+                data = posts,
+                prevKey = if (page == 1) null else page - 1,
+                nextKey = if (posts.isEmpty()) null else page + 1
+            )
+        } catch (e: Exception) {
+            LoadResult.Error(e)
         }
     }
 
