@@ -14,8 +14,9 @@ interface PostDao {
     suspend fun insertAll(posts: List<PostEntity>)
 
     @Query("SELECT * FROM posts ORDER BY timestamp DESC")
-    fun pagingSource(): PagingSource<Int, PostEntity>
+    fun getPosts(): PagingSource<Int, PostEntity>
 
     @Query("DELETE FROM posts")
-    suspend fun clearAll()
+    suspend fun clearPosts()
+
 }
