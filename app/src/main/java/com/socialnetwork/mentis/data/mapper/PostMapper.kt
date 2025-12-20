@@ -1,30 +1,29 @@
 package com.socialnetwork.mentis.data.mapper
 
+import com.socialnetwork.mentis.data.dto.PostDto
 import com.socialnetwork.mentis.data.local.entity.PostEntity
 import com.socialnetwork.mentis.domain.model.Post
 
-fun PostEntity.toPost(): Post {
-    return Post(
+fun PostDto.toEntity(): PostEntity {
+    return PostEntity(
         id = id,
+        user = user,
         imageUrl = imageUrl,
-        user = username,
-        likes = likeCount,
-        comments = commentCount,
-        caption = description,
+        caption = caption,
+        likes = likes,
+        comments = comments,
         timestamp = timestamp
     )
 }
 
-fun Post.toPostEntity(): PostEntity {
-    return PostEntity(
+fun PostEntity.toDomain(): Post {
+    return Post(
         id = id,
-        userId = "", 
-        username = user,
-        userImageUrl = "",
+        user = user,
         imageUrl = imageUrl,
-        description = caption,
-        timestamp = timestamp,
-        likeCount = likes,
-        commentCount = comments
+        caption = caption,
+        likes = likes,
+        comments = comments,
+        timestamp = timestamp
     )
 }
