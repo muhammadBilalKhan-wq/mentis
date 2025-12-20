@@ -7,23 +7,23 @@ import com.socialnetwork.mentis.domain.model.Post
 fun PostDto.toEntity(): PostEntity {
     return PostEntity(
         id = id,
-        description = description,
-        date = date,
+        user = user,
+        imageUrl = imageUrl,
+        caption = caption,
         likes = likes,
         comments = comments,
-        imageUrl = imageUrl,
-        user = user
+        timestamp = timestamp
     )
 }
 
 fun PostEntity.toDomain(): Post {
     return Post(
         id = id,
-        description = description,
-        date = date,
+        user = user,
+        imageUrl = imageUrl,
+        caption = caption,
         likes = likes,
         comments = comments,
-        imageUrl = imageUrl,
-        user = user
+        timestamp = timestamp
     )
 }
