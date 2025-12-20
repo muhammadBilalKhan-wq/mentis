@@ -67,6 +67,7 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:2.3.8")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.8")
     implementation("io.ktor:ktor-client-logging:2.3.8")
+    implementation("io.ktor:ktor-client-okhttp:2.3.8")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
