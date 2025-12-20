@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
@@ -71,48 +73,87 @@ fun FeedScreen(
                 .padding(paddingValues)
                 .nestedScroll(pullToRefreshState.nestedScrollConnection)
         ) {
-            if (posts.loadState.refresh is LoadState.Error && posts.itemCount == 0) {
-                val e = posts.loadState.refresh as LoadState.Error
-                Text(
-                    text = e.error.localizedMessage ?: "An error occurred",
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    items(count = posts.itemCount) { index ->
-                        val post = posts[index]
-                        if (post != null) {
-                            PostItem(post = post)
-                        }
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(count = posts.itemCount) { index ->
+                    val post = posts[index]
+                    if (post != null) {
+                        PostItem(post = post)
                     }
+                }
 
-                    posts.loadState.apply {
-                        when {
-                            append is LoadState.Loading -> {
-                                item {
-                                    CircularProgressIndicator(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .wrapContentWidth(Alignment.CenterHorizontally)
-                                    )
-                                }
+                posts.loadState.apply {
+                    when {
+                        append is LoadState.Loading -> {
+                            item {
+                                CircularProgressIndicator(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .wrapContentWidth(Alignment.CenterHorizontally)
+                                )
                             }
-                            append is LoadState.Error -> {
-                                val e = append as LoadState.Error
-                                item {
+                        }
+
+                        append is LoadState.Error -> {
+                            val e = append as LoadState.Error
+                            item {
+                                Column(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
                                     Text(
                                         text = e.error.localizedMessage ?: "An error occurred",
-                                        modifier = Modifier.fillMaxWidth(),
+                                        textAlign = TextAlign.Center
                                     )
+                                    Button(onClick = { posts.retry() }) {
+                                        Text("Retry")
+                                    }
                                 }
                             }
                         }
                     }
                 }
+            }
+
+            when (val refreshState = posts.loadState.refresh) {
+                is LoadState.Loading -> {
+                    if (posts.itemCount == 0) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
+                is LoadState.Error -> {
+                    if (posts.itemCount == 0) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Text(
+                                    text = refreshState.error.localizedMessage ?: "An error occurred",
+                                    textAlign = TextAlign.Center
+                                )
+                                Button(onClick = { posts.refresh() }) {
+                                    Text("Refresh")
+                                }
+                            }
+                        }
+                    }
+                }
+                else -> Unit
             }
 
             PullToRefreshContainer(
