@@ -54,17 +54,17 @@ fun PostItem(post: Post) {
         )
         Row(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
             IconButton(onClick = { }) {
-                Icon(Icons.Default.ThumbUp, contentDescription = "Like")
+                Icon(Icons.Filled.ThumbUp, contentDescription = "Like")
             }
             IconButton(onClick = { }) {
-                Icon(Icons.Default.Share, contentDescription = "Comment")
+                Icon(Icons.Filled.Share, contentDescription = "Comment")
             }
             IconButton(onClick = { }) {
-                Icon(Icons.Default.Send, contentDescription = "Send")
+                Icon(Icons.Filled.Send, contentDescription = "Send")
             }
             Spacer(modifier = Modifier.weight(1f))
             IconButton(onClick = { }) {
-                Icon(Icons.Default.Bookmark, contentDescription = "Bookmark")
+                Icon(Icons.Filled.Bookmark, contentDescription = "Bookmark")
             }
         }
         Column(modifier = Modifier.padding(horizontal = 8.dp)) {

@@ -22,8 +22,7 @@ fun HomeScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(count = posts.itemCount) { index ->
-                val post = posts[index]
+            items(posts) { post ->
                 if (post != null) {
                     PostItem(post = post)
                 }
