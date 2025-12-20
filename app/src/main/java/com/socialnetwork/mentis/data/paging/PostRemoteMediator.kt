@@ -32,12 +32,14 @@ class PostRemoteMediator(
                     val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
                     remoteKeys?.nextKey?.minus(1) ?: 1
                 }
+
                 LoadType.PREPEND -> {
                     val remoteKeys = getRemoteKeyForFirstItem(state)
                     val prevKey = remoteKeys?.prevKey
                         ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
                     prevKey
                 }
+
                 LoadType.APPEND -> {
                     val remoteKeys = getRemoteKeyForLastItem(state)
                     val nextKey = remoteKeys?.nextKey
@@ -57,9 +59,9 @@ class PostRemoteMediator(
                     postDao.clearAll()
                     remoteKeysDao.clearRemoteKeys()
                 }
-                val keys = response.map { post ->
+                val keys = response.map { postDto ->
                     RemoteKeys(
-                        id = post.id.toString(),
+                        id = postDto.id.toString(),
                         prevKey = prevKey,
                         nextKey = nextKey
                     )

@@ -4,7 +4,7 @@ import com.socialnetwork.mentis.data.dto.PostDto
 import com.socialnetwork.mentis.data.local.entity.PostEntity
 import com.socialnetwork.mentis.domain.model.Post
 
-fun PostDto.toPost(): Post {
+fun PostDto.toDomain(): Post {
     return Post(
         id = id.toString(),
         user = "User $userId",

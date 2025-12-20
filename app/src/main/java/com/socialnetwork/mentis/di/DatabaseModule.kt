@@ -3,7 +3,6 @@ package com.socialnetwork.mentis.di
 import android.content.Context
 import androidx.room.Room
 import com.socialnetwork.mentis.data.local.AppDatabase
-import com.socialnetwork.mentis.data.local.dao.PostDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,13 +20,15 @@ object DatabaseModule {
         return Room.databaseBuilder(
             context,
             AppDatabase::class.java,
-            "mentis.db"
+            "mentis-db"
         ).build()
     }
 
     @Provides
     @Singleton
-    fun providePostDao(appDatabase: AppDatabase): PostDao {
-        return appDatabase.postDao()
-    }
+    fun providePostDao(appDatabase: AppDatabase) = appDatabase.postDao()
+
+    @Provides
+    @Singleton
+    fun provideRemoteKeysDao(appDatabase: AppDatabase) = appDatabase.remoteKeysDao()
 }
