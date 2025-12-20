@@ -1,6 +1,9 @@
-package com.socialnetwork.mentis.domain.model
+package com.socialnetwork.mentis.core.data.remote.dto
 
-data class Post(
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class PostDto(
     val id: String,
     val imageUrl: String,
     val user: String,

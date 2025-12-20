@@ -1,25 +1,43 @@
 package com.socialnetwork.mentis.di
 
-import com.socialnetwork.mentis.data.repository.FakeFeedRepository
+import com.socialnetwork.mentis.data.remote.FeedApi
+import com.socialnetwork.mentis.data.repository.FeedRepositoryImpl
 import com.socialnetwork.mentis.domain.repository.FeedRepository
-import com.socialnetwork.mentis.domain.usecase.GetFeedPostsUseCase
-import com.socialnetwork.mentis.domain.usecase.GetFeedPostsUseCaseImpl
-import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.serialization.kotlinx.json.json
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class AppModule {
+object AppModule {
 
-    @Binds
+    @Provides
     @Singleton
-    abstract fun bindGetFeedPostsUseCase(impl: GetFeedPostsUseCaseImpl): GetFeedPostsUseCase
+    fun provideHttpClient(): HttpClient {
+        return HttpClient(CIO) {
+            install(Logging)
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+    }
 
-    @Binds
+    @Provides
     @Singleton
-    abstract fun bindFeedRepository(impl: FakeFeedRepository): FeedRepository
+    fun provideFeedApi(client: HttpClient): FeedApi {
+        return FeedApi(client)
+    }
 
+    @Provides
+    @Singleton
+    fun provideFeedRepository(feedApi: FeedApi): FeedRepository {
+        return FeedRepositoryImpl(feedApi)
+    }
 }
