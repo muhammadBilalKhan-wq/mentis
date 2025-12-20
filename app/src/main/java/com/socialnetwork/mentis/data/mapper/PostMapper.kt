@@ -6,27 +6,25 @@ import com.socialnetwork.mentis.domain.model.Post
 fun PostEntity.toPost(): Post {
     return Post(
         id = id,
-        userId = userId,
-        username = username,
-        userImageUrl = userImageUrl,
         imageUrl = imageUrl,
-        description = description,
-        timestamp = timestamp,
-        likeCount = likeCount,
-        commentCount = commentCount
+        user = username,
+        likes = likeCount,
+        comments = commentCount,
+        caption = description,
+        timestamp = timestamp
     )
 }
 
 fun Post.toPostEntity(): PostEntity {
     return PostEntity(
         id = id,
-        userId = userId,
-        username = username,
-        userImageUrl = userImageUrl,
+        userId = "", 
+        username = user,
+        userImageUrl = "",
         imageUrl = imageUrl,
-        description = description,
+        description = caption,
         timestamp = timestamp,
-        likeCount = likeCount,
-        commentCount = commentCount
+        likeCount = likes,
+        commentCount = comments
     )
 }
