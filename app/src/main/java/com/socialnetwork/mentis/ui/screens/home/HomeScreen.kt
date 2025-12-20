@@ -1,5 +1,6 @@
 package com.socialnetwork.mentis.ui.screens.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,14 +11,15 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.socialnetwork.mentis.presentation.home.HomeViewModel
+import com.socialnetwork.mentis.presentation.feed.FeedViewModel
 import com.socialnetwork.mentis.ui.screens.home.components.PostItem
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: FeedViewModel = hiltViewModel()
 ) {
     val posts = viewModel.posts.collectAsLazyPagingItems()
+    Log.d("HomeScreen", "Collecting posts: ${posts.itemCount}")
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {

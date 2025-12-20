@@ -1,5 +1,6 @@
 package com.socialnetwork.mentis.presentation.feed
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -16,4 +17,8 @@ class FeedViewModel @Inject constructor(
 ) : ViewModel() {
 
     val posts: Flow<PagingData<Post>> = getFeedPostsUseCase().cachedIn(viewModelScope)
+
+    init {
+        Log.d("FeedViewModel", "ViewModel created")
+    }
 }
