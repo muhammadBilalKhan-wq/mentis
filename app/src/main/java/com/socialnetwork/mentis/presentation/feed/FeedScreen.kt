@@ -146,8 +146,8 @@ fun FeedScreen(
                                     text = refreshState.error.localizedMessage ?: "An error occurred",
                                     textAlign = TextAlign.Center
                                 )
-                                Button(onClick = { posts.refresh() }) {
-                                    Text("Refresh")
+                                Button(onClick = { posts.retry() }) {
+                                    Text("Retry")
                                 }
                             }
                         }
