@@ -4,7 +4,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,7 +41,7 @@ fun PostItem(post: Post) {
             Text(text = post.user, style = MaterialTheme.typography.bodyMedium)
             Spacer(modifier = Modifier.weight(1f))
             IconButton(onClick = { }) {
-                Icon(Icons.Default.MoreVert, contentDescription = "More options")
+                Icon(Icons.Filled.MoreVert, contentDescription = "More options")
             }
         }
         Image(
@@ -50,17 +54,17 @@ fun PostItem(post: Post) {
         )
         Row(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
             IconButton(onClick = { }) {
-                Icon(Icons.Default.ThumbUp, contentDescription = "Like")
+                Icon(Icons.Filled.ThumbUp, contentDescription = "Like")
             }
             IconButton(onClick = { }) {
-                Icon(Icons.Default.Share, contentDescription = "Comment")
+                Icon(Icons.Filled.Share, contentDescription = "Comment")
             }
             IconButton(onClick = { }) {
-                Icon(Icons.Default.Send, contentDescription = "Send")
+                Icon(Icons.Filled.Send, contentDescription = "Send")
             }
             Spacer(modifier = Modifier.weight(1f))
             IconButton(onClick = { }) {
-                Icon(Icons.Default.Bookmark, contentDescription = "Bookmark")
+                Icon(Icons.Filled.Bookmark, contentDescription = "Bookmark")
             }
         }
         Column(modifier = Modifier.padding(horizontal = 8.dp)) {
