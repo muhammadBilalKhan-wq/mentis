@@ -64,6 +64,11 @@ dependencies {
     implementation(libs.androidx.paging.compose)
     implementation("io.coil-kt:coil-compose:2.5.0")
 
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    implementation("androidx.room:room-paging:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+
     implementation("io.ktor:ktor-client-cio:2.3.8")
     implementation("io.ktor:ktor-client-content-negotiation:2.3.8")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.8")
