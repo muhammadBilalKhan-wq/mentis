@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt.android)
     id("kotlin-kapt")
+    id("kotlinx-serialization")
 }
 
 android {
@@ -61,6 +62,12 @@ dependencies {
     implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.androidx.paging.compose)
     implementation("io.coil-kt:coil-compose:2.5.0")
+
+    implementation("io.ktor:ktor-client-cio:2.3.8")
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.8")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.8")
+    implementation("io.ktor:ktor-client-logging:2.3.8")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
