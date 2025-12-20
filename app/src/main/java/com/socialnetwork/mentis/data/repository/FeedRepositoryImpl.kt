@@ -3,7 +3,7 @@ package com.socialnetwork.mentis.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.socialnetwork.mentis.data.paging.FeedPagingSource
+import com.socialnetwork.mentis.data.paging.PostPagingSource
 import com.socialnetwork.mentis.data.remote.FeedApi
 import com.socialnetwork.mentis.domain.model.Post
 import com.socialnetwork.mentis.domain.repository.FeedRepository
@@ -15,7 +15,7 @@ class FeedRepositoryImpl(private val feedApi: FeedApi) : FeedRepository {
         return Pager(
             config = PagingConfig(pageSize = 20),
             pagingSourceFactory = {
-                FeedPagingSource(feedApi)
+                PostPagingSource(feedApi)
             }
         ).flow
     }

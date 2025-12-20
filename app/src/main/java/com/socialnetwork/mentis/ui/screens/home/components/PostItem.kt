@@ -41,7 +41,7 @@ fun PostItem(post: Post) {
             }
         }
         Image(
-            painter = rememberImagepainter(data = post.imageUrl),
+            painter = rememberImagePainter(data = post.imageUrl),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
