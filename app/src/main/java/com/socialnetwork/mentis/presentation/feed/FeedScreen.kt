@@ -131,11 +131,11 @@ fun PostItem(
     Card(modifier = modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = post.author,
+                text = post.user,
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
-                text = post.content,
+                text = post.caption,
                 style = MaterialTheme.typography.bodyMedium
             )
         }

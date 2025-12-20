@@ -6,5 +6,6 @@ data class Post(
     val user: String,
     val likes: Int,
     val comments: Int,
-    val caption: String
+    val caption: String,
+    val timestamp: Long
 )

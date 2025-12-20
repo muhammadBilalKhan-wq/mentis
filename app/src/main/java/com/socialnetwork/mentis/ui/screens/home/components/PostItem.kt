@@ -4,7 +4,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -50,17 +54,17 @@ fun PostItem(post: Post) {
         )
         Row(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
             IconButton(onClick = { }) {
-                Icon(painterResource(id = R.drawable.ic_like), contentDescription = "Like")
+                Icon(Icons.Default.ThumbUp, contentDescription = "Like")
             }
             IconButton(onClick = { }) {
-                Icon(painterResource(id = R.drawable.ic_comment), contentDescription = "Comment")
+                Icon(Icons.Default.Share, contentDescription = "Comment")
             }
             IconButton(onClick = { }) {
-                Icon(painterResource(id = R.drawable.ic_send), contentDescription = "Send")
+                Icon(Icons.Default.Send, contentDescription = "Send")
             }
             Spacer(modifier = Modifier.weight(1f))
             IconButton(onClick = { }) {
-                Icon(painterResource(id = R.drawable.ic_bookmark), contentDescription = "Bookmark")
+                Icon(Icons.Default.Bookmark, contentDescription = "Bookmark")
             }
         }
         Column(modifier = Modifier.padding(horizontal = 8.dp)) {

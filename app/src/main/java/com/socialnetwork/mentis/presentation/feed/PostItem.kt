@@ -21,9 +21,9 @@ fun PostItem(post: Post) {
             .padding(vertical = 4.dp, horizontal = 8.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = post.author, style = MaterialTheme.typography.titleMedium)
+            Text(text = post.user, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = post.content, style = MaterialTheme.typography.bodyMedium)
+            Text(text = post.caption, style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
