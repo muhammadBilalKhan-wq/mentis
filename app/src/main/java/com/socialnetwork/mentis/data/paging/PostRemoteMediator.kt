@@ -59,7 +59,7 @@ class PostRemoteMediator(
                 }
                 val keys = response.map { post ->
                     RemoteKeys(
-                        id = post.id,
+                        id = post.id.toString(),
                         prevKey = prevKey,
                         nextKey = nextKey
                     )
