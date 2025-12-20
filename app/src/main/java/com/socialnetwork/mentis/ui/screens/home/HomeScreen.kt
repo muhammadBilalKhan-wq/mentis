@@ -12,7 +12,6 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.socialnetwork.mentis.presentation.home.HomeViewModel
 import com.socialnetwork.mentis.ui.screens.home.components.PostItem
-import androidx.paging.compose.items
 
 @Composable
 fun HomeScreen(
@@ -22,9 +21,10 @@ fun HomeScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(posts) { post ->
-                post?.let {
-                    PostItem(post = it)
+            items(posts.itemCount) { index ->
+                val post = posts[index]
+                if (post != null) {
+                    PostItem(post = post)
                 }
             }
         }
