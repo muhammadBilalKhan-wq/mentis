@@ -13,6 +13,7 @@ kotlinSerialization = "1.9.22"
 lifecycle = "2.7.0"
 navigation-compose = "2.7.7"
 paging = "3.2.1"
+room = "2.6.1"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
@@ -34,6 +35,10 @@ androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation-compose" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
 androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "paging" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "room" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 junit = { module = "junit:junit", version.ref = "junit" }
@@ -42,4 +47,5 @@ junit = { module = "junit:junit", version.ref = "junit" }
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization" }

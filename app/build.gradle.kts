@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlinSerialization)
-    id("kotlin-kapt")
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
@@ -64,10 +64,10 @@ dependencies {
     implementation(libs.androidx.paging.compose)
     implementation("io.coil-kt:coil-compose:2.5.0")
 
-    implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
-    implementation("androidx.room:room-paging:2.6.1")
-    kapt("androidx.room:room-compiler:2.6.1")
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.paging)
+    kapt(libs.androidx.room.compiler)
 
     implementation("io.ktor:ktor-client-cio:2.3.8")
     implementation("io.ktor:ktor-client-content-negotiation:2.3.8")
