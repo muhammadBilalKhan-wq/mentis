@@ -6,7 +6,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.socialnetwork.mentis.data.local.AppDatabase
-import com.socialnetwork.mentis.data.mapper.toDomain
 import com.socialnetwork.mentis.data.paging.PostRemoteMediator
 import com.socialnetwork.mentis.data.remote.FeedApi
 import com.socialnetwork.mentis.domain.model.Post
