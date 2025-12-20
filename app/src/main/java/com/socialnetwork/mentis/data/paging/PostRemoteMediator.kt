@@ -10,7 +10,7 @@ import com.socialnetwork.mentis.data.local.entity.PostEntity
 import com.socialnetwork.mentis.data.local.entity.RemoteKeys
 import com.socialnetwork.mentis.data.mapper.toEntity
 import com.socialnetwork.mentis.data.remote.FeedApi
-import retrofit2.HttpException
+import io.ktor.client.plugins.ResponseException
 import java.io.IOException
 
 @OptIn(ExperimentalPagingApi::class)
@@ -71,7 +71,7 @@ class PostRemoteMediator(
             MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (e: IOException) {
             MediatorResult.Error(e)
-        } catch (e: HttpException) {
+        } catch (e: ResponseException) {
             MediatorResult.Error(e)
         }
     }
