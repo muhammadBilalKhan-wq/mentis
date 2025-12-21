@@ -10,5 +10,5 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(repository: FeedRepository) : ViewModel() {
 
-    val posts = repository.getPosts().cachedIn(viewModelScope)
+    val posts = repository.getFeedPosts().cachedIn(viewModelScope)
 }

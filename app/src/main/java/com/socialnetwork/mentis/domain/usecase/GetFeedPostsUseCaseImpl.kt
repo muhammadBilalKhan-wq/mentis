@@ -10,6 +10,6 @@ class GetFeedPostsUseCaseImpl @Inject constructor(
     private val feedRepository: FeedRepository
 ) : GetFeedPostsUseCase {
     override operator fun invoke(): Flow<PagingData<Post>> {
-        return feedRepository.getPosts()
+        return feedRepository.getFeedPosts()
     }
 }
