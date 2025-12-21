@@ -9,7 +9,6 @@ import com.socialnetwork.mentis.data.local.AppDatabase
 import com.socialnetwork.mentis.data.local.entity.PostEntity
 import com.socialnetwork.mentis.data.local.entity.RemoteKeys
 import com.socialnetwork.mentis.data.remote.FeedApi
-import com.socialnetwork.mentis.data.remote.dto.PostDto
 
 @OptIn(ExperimentalPagingApi::class)
 class PostRemoteMediator(
@@ -37,7 +36,7 @@ class PostRemoteMediator(
                 }
             }
 
-            val response = feedApi.getFeed(page = page, pageSize = state.config.pageSize)
+            val response = feedApi.getPosts(page = page, limit = 10)
 
             appDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
@@ -53,14 +52,4 @@ class PostRemoteMediator(
             MediatorResult.Error(e)
         }
     }
-    private fun PostDto.toPostEntity() = PostEntity(
-        id = id,
-        description = description,
-        image = image,
-        likes = likes,
-        comments = comments,
-        shares = shares,
-        author = author
-    )
-
 }
