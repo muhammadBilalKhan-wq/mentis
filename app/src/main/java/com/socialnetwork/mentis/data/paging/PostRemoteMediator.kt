@@ -36,7 +36,7 @@ class PostRemoteMediator(
                 }
             }
 
-            val response = feedApi.getPosts(page = page, limit = 10)
+            val response = feedApi.getFeedPosts(page = page, limit = 10)
 
             appDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {

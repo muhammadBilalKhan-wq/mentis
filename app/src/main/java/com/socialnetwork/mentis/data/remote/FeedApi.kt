@@ -10,7 +10,7 @@ import javax.inject.Inject
 class FeedApi @Inject constructor(
     private val client: HttpClient
 ) {
-    suspend fun getPosts(page: Int, limit: Int): List<PostDto> {
+    suspend fun getFeedPosts(page: Int, limit: Int): List<PostDto> {
         return client.get("https://jsonplaceholder.typicode.com/posts") {
             parameter("_page", page)
             parameter("_limit", limit)
