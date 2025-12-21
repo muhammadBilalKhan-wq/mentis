@@ -63,7 +63,8 @@ class PostRemoteMediator(
                     RemoteKeys(
                         id = postDto.id.toString(),
                         prevKey = prevKey,
-                        nextKey = nextKey
+                        nextKey = nextKey,
+                        lastUpdated = System.currentTimeMillis()
                     )
                 }
                 remoteKeysDao.insertAll(keys)
