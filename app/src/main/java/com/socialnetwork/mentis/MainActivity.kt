@@ -1,14 +1,29 @@
 package com.socialnetwork.mentis
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.socialnetwork.mentis.R
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
+import com.socialnetwork.mentis.presentation.ui.feed.FeedScreen
+import com.socialnetwork.mentis.presentation.ui.theme.MentisTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContent {
+            MentisTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    FeedScreen()
+                }
+            }
+        }
     }
 }
