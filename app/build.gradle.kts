@@ -38,6 +38,7 @@ android {
     }
     buildFeatures {
         compose = true
+        viewBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.10"
@@ -61,6 +62,7 @@ kapt {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
