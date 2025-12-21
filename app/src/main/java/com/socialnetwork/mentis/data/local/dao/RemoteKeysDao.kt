@@ -10,14 +10,11 @@ import com.socialnetwork.mentis.data.local.entity.RemoteKeys
 interface RemoteKeysDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(remoteKey: List<RemoteKeys>)
+    suspend fun insertOrReplace(remoteKey: RemoteKeys)
 
-    @Query("SELECT * FROM remote_keys WHERE id = :id")
-    suspend fun remoteKeysPostId(id: String): RemoteKeys?
+    @Query("SELECT * FROM remote_keys WHERE label = :query")
+    suspend fun getRemoteKey(query: String): RemoteKeys
 
-    @Query("SELECT * FROM remote_keys WHERE id = :id")
-    suspend fun getRemoteKeys(id: String): RemoteKeys?
-
-    @Query("DELETE FROM remote_keys")
-    suspend fun clearRemoteKeys()
+    @Query("DELETE FROM remote_keys WHERE label = :query")
+    suspend fun deleteRemoteKey(query: String)
 }

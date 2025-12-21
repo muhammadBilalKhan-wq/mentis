@@ -7,7 +7,7 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.socialnetwork.mentis.data.local.AppDatabase
 import com.socialnetwork.mentis.data.local.entity.PostEntity
-import com.socialnetwork.mentis.data.local.entity.RemoteKeyEntity
+import com.socialnetwork.mentis.data.local.entity.RemoteKeys
 import com.socialnetwork.mentis.data.remote.FeedApi
 import com.socialnetwork.mentis.data.remote.dto.PostDto
 
@@ -18,7 +18,7 @@ class PostRemoteMediator(
 ) : RemoteMediator<Int, PostEntity>() {
 
     private val postDao = appDatabase.postDao()
-    private val remoteKeyDao = appDatabase.remoteKeyDao()
+    private val remoteKeysDao = appDatabase.remoteKeysDao()
 
     override suspend fun load(loadType: LoadType, state: PagingState<Int, PostEntity>): MediatorResult {
         return try {
@@ -28,7 +28,7 @@ class PostRemoteMediator(
                 LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
                 LoadType.APPEND -> {
                     val remoteKey = appDatabase.withTransaction {
-                        remoteKeyDao.getRemoteKey("post")
+                        remoteKeysDao.getRemoteKey("post")
                     }
                     if (remoteKey.nextPage == null) {
                         return MediatorResult.Success(endOfPaginationReached = true)
@@ -41,11 +41,11 @@ class PostRemoteMediator(
 
             appDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    postDao.deleteAllPosts()
-                    remoteKeyDao.deleteRemoteKey("post")
+                    postDao.clearAll()
+                    remoteKeysDao.deleteRemoteKey("post")
                 }
-                remoteKeyDao.insertOrReplace(RemoteKeyEntity(label = "post", nextPage = page + 1))
-                postDao.insertOrReplace(response.map { it.toPostEntity() })
+                remoteKeysDao.insertOrReplace(RemoteKeys(label = "post", nextPage = page + 1))
+                postDao.insertAll(response.map { it.toPostEntity() })
             }
 
             MediatorResult.Success(endOfPaginationReached = response.isEmpty())
