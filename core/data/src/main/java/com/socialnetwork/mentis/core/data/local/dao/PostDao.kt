@@ -1,11 +1,11 @@
-package com.socialnetwork.mentis.data.local.dao
+package com.socialnetwork.mentis.core.data.local.dao
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.socialnetwork.mentis.data.local.entity.PostEntity
+import com.socialnetwork.mentis.core.data.local.entity.PostEntity
 
 @Dao
 interface PostDao {

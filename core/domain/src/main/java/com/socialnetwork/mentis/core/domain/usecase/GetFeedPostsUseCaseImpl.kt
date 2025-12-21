@@ -1,4 +1,4 @@
-package com.socialnetwork.mentis.domain.usecase
+package com.socialnetwork.mentis.core.domain.usecase
 
 import androidx.paging.PagingData
 import com.socialnetwork.mentis.core.domain.model.Post

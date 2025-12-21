@@ -1,8 +1,7 @@
 package com.socialnetwork.mentis.di
 
 import com.socialnetwork.mentis.core.domain.repository.FeedRepository
-import com.socialnetwork.mentis.domain.usecase.GetFeedPostsUseCase
-import com.socialnetwork.mentis.domain.usecase.GetFeedPostsUseCaseImpl
+import com.socialnetwork.mentis.core.domain.usecase.GetFeedPostsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,6 +15,6 @@ object UseCaseModule {
     @Provides
     @ViewModelScoped
     fun provideGetFeedPostsUseCase(repository: FeedRepository): GetFeedPostsUseCase {
-        return GetFeedPostsUseCaseImpl(repository)
+        return GetFeedPostsUseCase(repository)
     }
 }

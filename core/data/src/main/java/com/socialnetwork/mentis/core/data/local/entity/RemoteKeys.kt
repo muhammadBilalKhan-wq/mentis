@@ -1,4 +1,4 @@
-package com.socialnetwork.mentis.data.local.entity
+package com.socialnetwork.mentis.core.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

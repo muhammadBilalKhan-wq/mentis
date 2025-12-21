@@ -1,15 +1,15 @@
-package com.socialnetwork.mentis.data.paging
+package com.socialnetwork.mentis.core.data.paging
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
+import com.socialnetwork.mentis.core.data.local.AppDatabase
+import com.socialnetwork.mentis.core.data.local.entity.PostEntity
+import com.socialnetwork.mentis.core.data.local.entity.RemoteKeys
+import com.socialnetwork.mentis.core.data.mappers.toEntity
 import com.socialnetwork.mentis.core.data.remote.FeedApi
-import com.socialnetwork.mentis.core.data.remote.dto.PostDto
-import com.socialnetwork.mentis.data.local.AppDatabase
-import com.socialnetwork.mentis.data.local.entity.PostEntity
-import com.socialnetwork.mentis.data.local.entity.RemoteKeys
 
 @OptIn(ExperimentalPagingApi::class)
 class PostRemoteMediator(
@@ -52,18 +52,5 @@ class PostRemoteMediator(
         } catch (e: Exception) {
             MediatorResult.Error(e)
         }
-    }
-
-    private fun PostDto.toEntity(): PostEntity {
-        return PostEntity(
-            id = this.id,
-            description = this.caption,
-            image = this.imageUrl,
-            likes = this.likes,
-            comments = this.comments,
-            shares = 0, // No shares field in PostDto from core/data
-            author = this.user,
-            timestamp = System.currentTimeMillis()
-        )
     }
 }
