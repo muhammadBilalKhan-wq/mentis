@@ -22,6 +22,8 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,6 +45,7 @@ fun FeedScreen(
     val posts = viewModel.posts.collectAsLazyPagingItems()
     val pullToRefreshState = rememberPullToRefreshState()
     val isRefreshing = posts.loadState.refresh is LoadState.Loading
+    val refreshSignal by viewModel.refreshSignal.collectAsState()
 
     if (pullToRefreshState.isRefreshing) {
         LaunchedEffect(true) {
@@ -53,6 +56,13 @@ fun FeedScreen(
     LaunchedEffect(isRefreshing) {
         if (!isRefreshing) {
             pullToRefreshState.endRefresh()
+        }
+    }
+
+    LaunchedEffect(refreshSignal) {
+        if (refreshSignal) {
+            posts.refresh()
+            viewModel.onRefreshHandled()
         }
     }
 
