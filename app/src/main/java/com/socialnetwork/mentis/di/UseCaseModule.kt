@@ -1,7 +1,6 @@
-
 package com.socialnetwork.mentis.di
 
-import com.socialnetwork.mentis.domain.repository.FeedRepository
+import com.socialnetwork.mentis.core.domain.repository.FeedRepository
 import com.socialnetwork.mentis.domain.usecase.GetFeedPostsUseCase
 import com.socialnetwork.mentis.domain.usecase.GetFeedPostsUseCaseImpl
 import dagger.Module

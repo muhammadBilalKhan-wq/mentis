@@ -1,8 +1,8 @@
 package com.socialnetwork.mentis.domain.usecase
 
 import androidx.paging.PagingData
-import com.socialnetwork.mentis.domain.model.Post
-import com.socialnetwork.mentis.domain.repository.FeedRepository
+import com.socialnetwork.mentis.core.domain.model.Post
+import com.socialnetwork.mentis.core.domain.repository.FeedRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
