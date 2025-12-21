@@ -1,12 +1,16 @@
 package com.socialnetwork.mentis.di
 
 import com.socialnetwork.mentis.data.remote.PostApi
+import com.socialnetwork.mentis.data.remote.PostApiImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import io.ktor.client.*
+import io.ktor.client.engine.android.*
+import io.ktor.client.features.json.*
+import io.ktor.client.features.json.serializer.*
+import kotlinx.serialization.json.Json
 import javax.inject.Singleton
 
 @Module
@@ -15,11 +19,21 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun providePostApi(): PostApi {
-        return Retrofit.Builder()
-            .baseUrl("https://my-json-server.typicode.com/typicode/demo/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(PostApi::class.java)
+    fun provideHttpClient(): HttpClient {
+        return HttpClient(Android) {
+            install(JsonFeature) {
+                serializer = KotlinxSerializer(Json {
+                    ignoreUnknownKeys = true
+                    isLenient = true
+                    prettyPrint = true
+                })
+            }
+        }
+    }
+
+    @Provides
+    @Singleton
+    fun providePostApi(client: HttpClient): PostApi {
+        return PostApiImpl(client)
     }
 }
