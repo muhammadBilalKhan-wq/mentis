@@ -1,4 +1,4 @@
-package com.socialnetwork.mentis.presentation.ui.feed
+package com.socialnetwork.mentis.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

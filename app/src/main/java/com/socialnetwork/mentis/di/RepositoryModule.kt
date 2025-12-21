@@ -1,20 +1,18 @@
 package com.socialnetwork.mentis.di
 
-import com.socialnetwork.mentis.data.repository.FeedRepositoryImpl
-import com.socialnetwork.mentis.core.domain.repository.FeedRepository
+import com.socialnetwork.mentis.core.domain.repository.PostRepository
+import com.socialnetwork.mentis.data.repository.PostRepositoryImpl
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RepositoryModule {
+abstract class RepositoryModule {
 
-    @Provides
+    @Binds
     @Singleton
-    fun provideFeedRepository(): FeedRepository {
-        return FeedRepositoryImpl()
-    }
+    abstract fun bindPostRepository(postRepositoryImpl: PostRepositoryImpl): PostRepository
 }
