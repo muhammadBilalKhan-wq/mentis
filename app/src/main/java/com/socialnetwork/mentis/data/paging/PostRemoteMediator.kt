@@ -7,11 +7,9 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.socialnetwork.mentis.data.local.AppDatabase
 import com.socialnetwork.mentis.data.local.entity.PostEntity
-import com.socialnetwork.mentis.data.local.entity.RemoteKeys
-import com.socialnetwork.mentis.data.mapper.toEntity
+import com.socialnetwork.mentis.data.local.entity.RemoteKeyEntity
 import com.socialnetwork.mentis.data.remote.FeedApi
-import io.ktor.client.plugins.ResponseException
-import java.io.IOException
+import com.socialnetwork.mentis.data.remote.dto.PostDto
 
 @OptIn(ExperimentalPagingApi::class)
 class PostRemoteMediator(
@@ -20,83 +18,49 @@ class PostRemoteMediator(
 ) : RemoteMediator<Int, PostEntity>() {
 
     private val postDao = appDatabase.postDao()
-    private val remoteKeysDao = appDatabase.remoteKeysDao()
+    private val remoteKeyDao = appDatabase.remoteKeyDao()
 
-    override suspend fun load(
-        loadType: LoadType,
-        state: PagingState<Int, PostEntity>
-    ): MediatorResult {
+    override suspend fun load(loadType: LoadType, state: PagingState<Int, PostEntity>): MediatorResult {
         return try {
-            val currentPage = when (loadType) {
-                LoadType.REFRESH -> {
-                    val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
-                    remoteKeys?.nextKey?.minus(1) ?: 1
-                }
 
-                LoadType.PREPEND -> {
-                    val remoteKeys = getRemoteKeyForFirstItem(state)
-                    val prevKey = remoteKeys?.prevKey
-                        ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
-                    prevKey
-                }
-
+            val page = when (loadType) {
+                LoadType.REFRESH -> 1
+                LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
                 LoadType.APPEND -> {
-                    val remoteKeys = getRemoteKeyForLastItem(state)
-                    val nextKey = remoteKeys?.nextKey
-                        ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
-                    nextKey
+                    val remoteKey = appDatabase.withTransaction {
+                        remoteKeyDao.getRemoteKey("post")
+                    }
+                    if (remoteKey.nextPage == null) {
+                        return MediatorResult.Success(endOfPaginationReached = true)
+                    }
+                    remoteKey.nextPage
                 }
             }
 
-            val response = feedApi.getPosts(page = currentPage, limit = state.config.pageSize)
-            val endOfPaginationReached = response.isEmpty()
-
-            val prevKey = if (currentPage == 1) null else currentPage - 1
-            val nextKey = if (endOfPaginationReached) null else currentPage + 1
+            val response = feedApi.getFeed(page = page, pageSize = state.config.pageSize)
 
             appDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    postDao.clearAll()
-                    remoteKeysDao.clearRemoteKeys()
+                    postDao.deleteAllPosts()
+                    remoteKeyDao.deleteRemoteKey("post")
                 }
-                val keys = response.map { postDto ->
-                    RemoteKeys(
-                        id = postDto.id.toString(),
-                        prevKey = prevKey,
-                        nextKey = nextKey,
-                        lastUpdated = System.currentTimeMillis()
-                    )
-                }
-                remoteKeysDao.insertAll(keys)
-                postDao.insertAll(response.map { it.toEntity() })
+                remoteKeyDao.insertOrReplace(RemoteKeyEntity(label = "post", nextPage = page + 1))
+                postDao.insertOrReplace(response.map { it.toPostEntity() })
             }
-            MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
-        } catch (e: IOException) {
-            MediatorResult.Error(e)
-        } catch (e: ResponseException) {
+
+            MediatorResult.Success(endOfPaginationReached = response.isEmpty())
+        } catch (e: Exception) {
             MediatorResult.Error(e)
         }
     }
+    private fun PostDto.toPostEntity() = PostEntity(
+        id = id,
+        description = description,
+        image = image,
+        likes = likes,
+        comments = comments,
+        shares = shares,
+        author = author
+    )
 
-    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, PostEntity>): RemoteKeys? {
-        return state.anchorPosition?.let { position ->
-            state.closestItemToPosition(position)?.id?.let { id ->
-                remoteKeysDao.remoteKeysPostId(id)
-            }
-        }
-    }
-
-    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, PostEntity>): RemoteKeys? {
-        return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
-            ?.let { post ->
-                remoteKeysDao.remoteKeysPostId(post.id)
-            }
-    }
-
-    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, PostEntity>): RemoteKeys? {
-        return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()
-            ?.let { post ->
-                remoteKeysDao.remoteKeysPostId(post.id)
-            }
-    }
 }
