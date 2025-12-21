@@ -1,5 +1,8 @@
 package com.socialnetwork.mentis.di
 
+import android.app.Application
+import androidx.room.Room
+import com.socialnetwork.mentis.data.local.AppDatabase
 import com.socialnetwork.mentis.data.remote.FeedApi
 import dagger.Module
 import dagger.Provides
@@ -29,6 +32,16 @@ object AppModule {
     @Singleton
     fun provideFeedApi(client: HttpClient): FeedApi {
         return FeedApi(client)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAppDatabase(app: Application): AppDatabase {
+        return Room.databaseBuilder(
+            app,
+            AppDatabase::class.java,
+            "mentis_db"
+        ).build()
     }
 
 }
