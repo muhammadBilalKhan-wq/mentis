@@ -34,6 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.socialnetwork.mentis.R
+import com.socialnetwork.mentis.presentation.feed.FeedViewModel
 import com.socialnetwork.mentis.ui.screens.home.components.PostItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,7 +88,7 @@ fun FeedScreen(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(count = posts.itemCount) { index ->
+                items(posts.itemCount) { index ->
                     val post = posts[index]
                     if (post != null) {
                         PostItem(post = post)
@@ -95,8 +96,8 @@ fun FeedScreen(
                 }
 
                 posts.loadState.apply {
-                    when {
-                        append is LoadState.Loading -> {
+                    when (append) {
+                        is LoadState.Loading -> {
                             item {
                                 CircularProgressIndicator(
                                     modifier = Modifier
@@ -106,7 +107,7 @@ fun FeedScreen(
                             }
                         }
 
-                        append is LoadState.Error -> {
+                        is LoadState.Error -> {
                             val e = append as LoadState.Error
                             item {
                                 Column(
@@ -124,6 +125,7 @@ fun FeedScreen(
                                 }
                             }
                         }
+                        else -> {}
                     }
                 }
             }
