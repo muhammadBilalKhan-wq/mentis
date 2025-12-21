@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class FakeFeedRepository @Inject constructor() : FeedRepository {
 
-    override fun getPosts(): Flow<PagingData<Post>> {
+    override fun getFeedPosts(): Flow<PagingData<Post>> {
         val fakePosts = listOf(
             Post(
                 id = "1",
