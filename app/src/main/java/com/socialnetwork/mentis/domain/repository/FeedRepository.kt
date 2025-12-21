@@ -5,5 +5,5 @@ import com.socialnetwork.mentis.domain.model.Post
 import kotlinx.coroutines.flow.Flow
 
 interface FeedRepository {
-    fun getPosts(): Flow<PagingData<Post>>
+    fun getFeedPosts(): Flow<PagingData<Post>>
 }

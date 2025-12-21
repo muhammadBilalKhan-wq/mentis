@@ -6,7 +6,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.socialnetwork.mentis.data.local.AppDatabase
-import com.socialnetwork.mentis.data.mapper.toDomain
 import com.socialnetwork.mentis.data.paging.PostRemoteMediator
 import com.socialnetwork.mentis.data.remote.FeedApi
 import com.socialnetwork.mentis.domain.model.Post
@@ -20,24 +19,17 @@ class FeedRepositoryImpl @Inject constructor(
     private val feedApi: FeedApi,
     private val appDatabase: AppDatabase
 ) : FeedRepository {
-
-    override fun getPosts(): Flow<PagingData<Post>> {
+    override fun getFeedPosts(): Flow<PagingData<Post>> {
         val pagingSourceFactory = { appDatabase.postDao().getPosts() }
-
         return Pager(
-            config = PagingConfig(
-                pageSize = 20,
-                enablePlaceholders = false
-            ),
+            config = PagingConfig(pageSize = 20),
             remoteMediator = PostRemoteMediator(
                 feedApi = feedApi,
                 appDatabase = appDatabase
             ),
             pagingSourceFactory = pagingSourceFactory
         ).flow.map { pagingData ->
-            pagingData.map { postEntity ->
-                postEntity.toDomain()
-            }
+            pagingData.map { it.toPost() }
         }
     }
 }
