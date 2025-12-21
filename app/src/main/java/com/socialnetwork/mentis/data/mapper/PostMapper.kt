@@ -19,9 +19,9 @@ fun PostDto.toDomain(): Post {
 fun PostDto.toEntity(): PostEntity {
     return PostEntity(
         id = id.toString(),
-        user = "User $userId",
-        imageUrl = "https://picsum.photos/id/$id/800/800",
-        caption = title,
+        author = "User $userId",
+        image = "https://picsum.photos/id/$id/800/800",
+        description = title,
         likes = (10..1000).random(),
         comments = (5..200).random(),
         timestamp = System.currentTimeMillis() - (0..100000000).random()
