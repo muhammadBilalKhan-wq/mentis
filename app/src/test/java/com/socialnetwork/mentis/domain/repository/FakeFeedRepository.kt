@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.flowOf
 
 class FakeFeedRepository : FeedRepository {
 
-    override fun getFeedPosts(): Flow<PagingData<Post>> {
+    override fun getFeedPostsError(): Flow<PagingData<Post>> {
         return flowOf(PagingData.from(emptyList()))
     }
 }
