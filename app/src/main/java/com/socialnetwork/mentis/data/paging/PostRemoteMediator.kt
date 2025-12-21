@@ -5,10 +5,11 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
+import com.socialnetwork.mentis.core.data.remote.FeedApi
+import com.socialnetwork.mentis.core.data.remote.dto.PostDto
 import com.socialnetwork.mentis.data.local.AppDatabase
 import com.socialnetwork.mentis.data.local.entity.PostEntity
 import com.socialnetwork.mentis.data.local.entity.RemoteKeys
-import com.socialnetwork.mentis.data.remote.FeedApi
 
 @OptIn(ExperimentalPagingApi::class)
 class PostRemoteMediator(
@@ -44,12 +45,25 @@ class PostRemoteMediator(
                     remoteKeysDao.deleteRemoteKey("post")
                 }
                 remoteKeysDao.insertOrReplace(RemoteKeys(label = "post", nextPage = page + 1))
-                postDao.insertAll(response.map { it.toPostEntity() })
+                postDao.insertAll(response.map { it.toEntity() })
             }
 
             MediatorResult.Success(endOfPaginationReached = response.isEmpty())
         } catch (e: Exception) {
             MediatorResult.Error(e)
         }
+    }
+
+    private fun PostDto.toEntity(): PostEntity {
+        return PostEntity(
+            id = this.id,
+            description = this.caption,
+            image = this.imageUrl,
+            likes = this.likes,
+            comments = this.comments,
+            shares = 0, // No shares field in PostDto from core/data
+            author = this.user,
+            timestamp = System.currentTimeMillis()
+        )
     }
 }

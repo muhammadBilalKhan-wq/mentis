@@ -1,7 +1,9 @@
 package com.socialnetwork.mentis.data.remote.dto
 
 import com.socialnetwork.mentis.data.local.entity.PostEntity
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class PostDto(
     val id: String,
     val description: String,
