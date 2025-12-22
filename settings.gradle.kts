@@ -21,3 +21,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "mentis"
 include(":app")
+include(":core:common")
+include(":core:data")
+include(":core:domain")
+include(":core:ui")

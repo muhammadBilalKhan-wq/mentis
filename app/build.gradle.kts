@@ -43,17 +43,6 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.10"
     }
-    sourceSets {
-        getByName("main") {
-            java.srcDirs(
-                "src/main/java",
-                "../core/data/src/main/java",
-                "../core/domain/src/main/java",
-                "../core/common/src/main/java",
-                "../core/ui/src/main/java"
-            )
-        }
-    }
 }
 
 kapt {
@@ -61,6 +50,11 @@ kapt {
 }
 
 dependencies {
+    implementation(project(":core:common"))
+    implementation(project(":core:data"))
+    implementation(project(":core:domain"))
+    implementation(project(":core:ui"))
+
     implementation(libs.androidx.core.ktx)
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation(libs.androidx.lifecycle.runtime.ktx)
